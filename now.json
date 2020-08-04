@@ -10,12 +10,9 @@
     {
       "src": "/.*",
       "dest": "index.js",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "*"
-        }
-      ]
+      "headers": {
+        "Access-Control-Allow-Headers": "*"
+      }
     }
   ]
 }
