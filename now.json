@@ -6,21 +6,16 @@
       "use": "@now/node-server"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/.*",
+      "src": "/.*",
+      "dest": "index.js",
       "headers": [
         {
           "key": "Access-Control-Allow-Headers",
           "value": "*"
         }
       ]
-    }
-  ],
-  "routes": [
-    {
-      "src": "/.*",
-      "dest": "index.js"
     }
   ]
 }
