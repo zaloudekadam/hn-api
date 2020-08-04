@@ -7,6 +7,11 @@ app.use(cors());
 
 const port = process.env.PORT || 5000;
 
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
+
 app.get("/best", async (req, res) => {
   res.send(await getBest());
 });
