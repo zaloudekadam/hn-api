@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaloudekadam/hn-api.git"
   },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zaloudekadam/hn-api/issues"
+  },
+  "homepage": "https://github.com/zaloudekadam/hn-api#readme",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
     "node-fetch": "^2.6.0"
   }
 }
