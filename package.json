@@ -20,7 +20,8 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.0"
   },
-  "devDependencies": {
-    "@vercel/node": "^1.7.4"
+  "engines": {
+    "node": "10.x"
   }
+
 }
