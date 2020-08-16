@@ -18,5 +18,8 @@
   "homepage": "https://github.com/zaloudekadam/hn-api#readme",
   "dependencies": {
     "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^1.7.4"
   }
 }

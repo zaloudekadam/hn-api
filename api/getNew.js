@@ -28,6 +28,6 @@ async function getNew(p = 50) {
   return result.filter(e => e != null);
 };
 
-export default (req, rese) => {
+module.exports = (req, res) => {
   res.json(getNew());
 }

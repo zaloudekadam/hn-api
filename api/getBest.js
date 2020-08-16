@@ -27,6 +27,6 @@ async function getBest() {
   return result.filter(e => e != null);
 }
 
-export default (req, rese) => {
+module.exports = (req, res) => {
   res.json(getBest());
 }
