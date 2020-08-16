@@ -74,3 +74,5 @@ async function getBest() {
 
   return result.filter(e => e != null);
 }
+
+app.listen(port);
