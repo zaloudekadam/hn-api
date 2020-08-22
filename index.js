@@ -1,6 +1,7 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const cors = require('cors');
+const { query } = require('express');
 const app = express();
 
 const port = process.env.PORT || 5000;
@@ -17,6 +18,10 @@ app.get("/best", async (req, res) => {
 
 app.get("/new", async (req, res) => {
   res.send(await getNew());
+});
+
+app.get("/comments/:id", async (req, res) => {
+  res.send(await getComments(req.params.id));
 });
 
 async function getNew(p = 50) {
@@ -76,6 +81,31 @@ async function getBest() {
   const result = await Promise.all(resultPromises);
 
   return result.filter(e => e != null);
+}
+
+async function getComments(postId) {
+  const post = await (await fetch('https://hacker-news.firebaseio.com/v0/item/' + postId + '.json')).json();
+
+  let resultPromises = [];
+  if (post.hasOwnProperty('kids')) {
+    resultPromises = post.kids.map(async id => {
+      const itemResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
+      const itemBody = await itemResponse.json();
+
+      return {
+        id,
+        text: itemBody.text,
+        kids: await getComments(id),
+        time: itemBody.time,
+        by: itemBody.by
+      }
+    });
+  }
+
+  const result = await Promise.all(resultPromises);
+
+  return result;
+
 }
 
 app.listen(port);
