@@ -20,6 +20,10 @@ app.get("/new", async (req, res) => {
   res.send(await getNew());
 });
 
+app.get("/descendants/:id", async (req, res) => {
+  res.send(await getDescendants(req.params.id));
+});
+
 app.get("/comments/:id", async (req, res) => {
   res.send(await getComments(req.params.id));
 });
@@ -83,6 +87,31 @@ async function getBest() {
   return result.filter(e => e != null);
 }
 
+async function getDescendants(postId) {
+  const post = await (await fetch('https://hacker-news.firebaseio.com/v0/item/' + postId + '.json')).json();
+
+  let resultPromises = [];
+  if (post.hasOwnProperty('kids')) {
+    resultPromises = post.kids.map(async id => {
+      const itemResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
+      const itemBody = await itemResponse.json();
+
+      return {
+        id,
+        text: itemBody.text,
+        kids: await getDescendants(id),
+        time: itemBody.time,
+        by: itemBody.by
+      }
+    });
+  }
+
+  const result = await Promise.all(resultPromises);
+
+  return result;
+
+}
+
 async function getComments(postId) {
   const post = await (await fetch('https://hacker-news.firebaseio.com/v0/item/' + postId + '.json')).json();
 
@@ -95,7 +124,7 @@ async function getComments(postId) {
       return {
         id,
         text: itemBody.text,
-        kids: await getComments(id),
+        kids: itemBody.kids,
         time: itemBody.time,
         by: itemBody.by
       }
@@ -105,7 +134,6 @@ async function getComments(postId) {
   const result = await Promise.all(resultPromises);
 
   return result;
-
 }
 
 app.listen(port);
