@@ -101,7 +101,8 @@ async function getDescendants(postId) {
         text: itemBody.text,
         kids: await getDescendants(id),
         time: itemBody.time,
-        by: itemBody.by
+        by: itemBody.by,
+        parent: itemBody.parent
       }
     });
   }
@@ -126,7 +127,8 @@ async function getComments(postId) {
         text: itemBody.text,
         kids: itemBody.kids,
         time: itemBody.time,
-        by: itemBody.by
+        by: itemBody.by,
+        parent: itemBody.parent
       }
     });
   }
