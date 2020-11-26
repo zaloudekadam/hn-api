@@ -5,6 +5,8 @@ const { query } = require('express');
 const app = express();
 
 const port = process.env.PORT || 5000;
+//TODO add cashing
+
 
 app.use(cors())
 
@@ -21,7 +23,7 @@ app.get("/new", async (req, res) => {
 });
 
 app.get("/descendants/:id", async (req, res) => {
-  res.send(await getDescendants(req.params.id));
+  res.send(await getDescendants(req.params.id, 3));
 });
 
 app.get("/comments/:id", async (req, res) => {
@@ -87,11 +89,12 @@ async function getBest() {
   return result.filter(e => e != null);
 }
 
-async function getDescendants(postId) {
+async function getDescendants(postId, depth, index = 0) {
+  //TODO add depth to search
   const post = await (await fetch('https://hacker-news.firebaseio.com/v0/item/' + postId + '.json')).json();
 
   let resultPromises = [];
-  if (post.hasOwnProperty('kids')) {
+  if (post.hasOwnProperty('kids') && (depth !== index)) {
     resultPromises = post.kids.map(async id => {
       const itemResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
       const itemBody = await itemResponse.json();
@@ -99,7 +102,7 @@ async function getDescendants(postId) {
       return {
         id,
         text: itemBody.text,
-        kids: await getDescendants(id),
+        kids: await getDescendants(id, depth, index + 1),
         time: itemBody.time,
         by: itemBody.by,
         parent: itemBody.parent
