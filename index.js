@@ -24,7 +24,6 @@ app.get("/new", async (req, res) => {
 
 
 app.get("/comments/:id/:depth", async (req, res) => {
-  //TODO add depth to comments and remove descendants
   res.send(await getComments(req.params.id, req.params.depth));
 });
 
@@ -88,11 +87,12 @@ async function getBest() {
 }
 
 
-async function getComments(postId, depth = 0, index = 1) {
+async function getComments(postId, depth, index = 0) {
   const post = await (await fetch('https://hacker-news.firebaseio.com/v0/item/' + postId + '.json')).json();
+  console.log(`depth: ${depth}, index ${index}`);
 
   let resultPromises = [];
-  if (post.hasOwnProperty('kids') && (depth !== index)) {
+  if (post.hasOwnProperty('kids') && (depth >= index)) {
     resultPromises = post.kids.map(async id => {
       const itemResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
       const itemBody = await itemResponse.json();
@@ -100,7 +100,7 @@ async function getComments(postId, depth = 0, index = 1) {
       return {
         id,
         text: itemBody.text,
-        kids: await getDescendants(id, depth, index + 1),
+        kids: await getComments(id, depth, index + 1),
         time: itemBody.time,
         by: itemBody.by,
         parent: itemBody.parent
